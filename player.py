@@ -3,7 +3,7 @@ import pygame, os, random
 
 WIDTH = 800
 HEIGHT = 800
-
+BLOCK_SIZE = 30 
 
 
 # player_img = pygame.image.load(os.path.join('Graphics','player.png'))
@@ -27,11 +27,31 @@ td = pygame.image.load(os.path.join('Graphics', 'snake', 'tail','tail_down.png')
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         self.randomize_head()
+        
         # self.body = {
         #     "head": self.head_rect,
         #     "body": self.body,
         #     "tail": self.tail,
         # }
+
+        self.snake = [
+            (
+                WIDTH // 2 - BLOCK_SIZE // 2 - BLOCK_SIZE, 
+                HEIGHT // 2 - BLOCK_SIZE //2,
+                "tail", "up"
+            ),
+            (
+                WIDTH // 2 - BLOCK_SIZE // 2, 
+                HEIGHT // 2 - BLOCK_SIZE //2,
+                "Body"
+            ),
+
+                (WIDTH // 2 - BLOCK_SIZE // 2 + BLOCK_SIZE,  HEIGHT // 2 - BLOCK_SIZE //2,
+                "head"
+            )
+        ]
+
+    
 
         self.head_img = hr
         self.body = []
@@ -46,8 +66,7 @@ class Player(pygame.sprite.Sprite):
     def randomize_head(self):
         self.head_x = random.randint(0,WIDTH - 30)
         self.head_y = random.randint(0,HEIGHT - 30)
-        self.head_w = 30
-        self.head_h = 30
+        self.head_w, self.head_h = BLOCK_SIZE, BLOCK_SIZE
         self.head_rect  = pygame.Rect(self.head_x, self.head_y, self.head_w, self.head_h) 
 
     def move(self, keys):
@@ -71,6 +90,7 @@ class Player(pygame.sprite.Sprite):
     
 
     def change_dir(self):
+
         if self.dir == 'r':
             self.head_img = hr
         elif self.dir == 'l':
@@ -82,8 +102,31 @@ class Player(pygame.sprite.Sprite):
         else: print('self.dir bug')
 
     def drawSelf(self, screen):
-        pygame.Surface.blit(screen, self.head_img, self.head_rect )
+        # pygame.Surface.blit(screen, self.head_img, self.head_rect )
         # pygame.draw.rect(screen, self.color, self.re ct)
+
+        sprite_list = []
+        for part in self.snake:
+            x = part[0]
+            y = part[1] 
+            if part[2] == "head":
+                pass
+            elif part[2] == "body":
+                pass
+            elif part[2] == "tail":
+                pass
+
+            if part[3] == "up":
+                pass
+            if part[3] == "down":
+                pass
+            if part[3] == "left":
+                pass
+            if part[3] == "right ":
+                pass
+            sprite_list.append()
+
+        sprite_list.draw()
 
     def checkCollision(self, player, enemy):
         col = pygame.sprite.collide_rect(player, enemy)
