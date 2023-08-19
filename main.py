@@ -1,6 +1,6 @@
 # Example file showing a basic pygame "game loop"
 import pygame
-from player import Player, WIDTH, HEIGHT
+from player import *
 from enemy import Enemy
 
 # pygame setup
@@ -21,6 +21,8 @@ CAT_UPDATE = pygame.USEREVENT
 pygame.time.set_timer(CAT_UPDATE, 150) 	
 def main():
     player = Player()
+    # player.randomize_head()
+    # player.randomize_dir()
     # enemy = Enemy(200,200,50,50)
     
     running = True
