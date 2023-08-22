@@ -36,45 +36,32 @@ td = pygame.image.load(os.path.join('Graphics', 'snake', 'tail','tail_down.png')
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
-        self.randomize_dir()
-        self.randomize_head() 
+        self.speedX = 0
+        self.speedY = 0
         # print(self.dir)
 
-        self.head_img = 0
-        self.body_img = 0
-        self.tail_img = 0
+        self.head_img = None
+        self.body_img = None
+        self.tail_img = None
 
         self.color = (255,0,0)
 
-        self.speedX = 10
-        self.speedY = 10
         
-        self.snake = [
-            [
-                self.tail_x, 
-                self.tail_y,
-                "tail", 
-                self.dir,
-                self.tail_img
-            ], [
-                self.body_x, 
-                self.body_y,
-                "body", 
-                self.dir,
-                self.body_img
+        self.randomize_dir()
+        self.randomize_head() 
 
-            ], [
-                self.head_x, 
-                self.head_y,
-                "head", 
-                self.dir,
-                self.head_img
-            ]
-        ]
+    def randomize_dir(self):
+        dir = ['r', 'l', 'u', 'd']
+        indx = random.randint(0, len(dir)-1)
+        self.dir = dir[indx]
+     
     
     def randomize_head(self):
+        # self.head_x = random.randint(0,WIDTH - 90) + self.speedX
+        # self.head_y = random.randint(0,HEIGHT - 90) + self.speedY
+        
         self.head_x = random.randint(0,WIDTH - 90)
-        self.head_y = random.randint(0,HEIGHT - 90)
+        self.head_y = random.randint(0,HEIGHT - 90) 
         self.head_w, self.head_h = BLOCK_SIZE, BLOCK_SIZE
         self.head_rect  = pygame.Rect(self.head_x, self.head_y, self.head_w, self.head_h) 
 
@@ -103,10 +90,31 @@ class Player(pygame.sprite.Sprite):
             self.tail_x = self.head_x 
             self.tail_y = self.head_y - 2*BLOCK_SIZE
 
-    def randomize_dir(self):
-        dir = ['r', 'l', 'u', 'd']
-        indx = random.randint(0, len(dir)-1)
-        self.dir = dir[indx]
+        self.snake = [
+            [
+                self.tail_x, 
+                self.tail_y,
+                "tail", 
+                self.dir,
+                self.tail_img,
+            ], [
+                self.body_x, 
+                self.body_y,
+                "body", 
+                self.dir,
+                self.body_img
+
+            ], [
+                self.head_x, 
+                self.head_y,
+                "head", 
+                self.dir,
+                self.head_img,
+                # self.speedX,
+                # self.speedY
+            ]
+        ]
+
 
 
     def drawSelf(self, screen):
@@ -177,58 +185,63 @@ class Player(pygame.sprite.Sprite):
                     self.tail_img = tl   
                     part[4] = tl
                     sprite_list.append(part)
-            # else: print('bugged') 
-            # print(sprite_list)
 
-            # if part[3] == "up":
-            #     self.dir = 'u'
-            # if part[3] == "down":
-            #     self.dir = 'd'
-            # if part[3] == "left":
-            #     self.dir = 'l'
-            # if part[3] == "right ":
-            #     self.dir = 'r'
+            part[0] += self.speedX
+            part[1] += self.speedY
 
         for part in sprite_list:
             pygame.Surface.blit(screen, part[4], (part[0], part[1]))
 
     def move(self, keys):
-        if keys[pygame.K_w] and self.dir != 'd':
+        turning_point = []
+        for part in self.snake:
+            turning_point.insert(
+                -1, 
+                [part[0], part[1], part[3]]
+            )
+        print(turning_point)
+
+        if keys == pygame.K_UP and self.dir != 'd':
             self.dir = 'u'
-            self.change_dir()
-            self.head_rect.y -= self.speedY
+            self.change_dir(turning_point) 
+            self.speedY = -3
+            self.speedX = 0
 
-        elif keys[pygame.K_s] and self.dir != 'u':
+        elif keys == pygame.K_DOWN and self.dir != 'u':
             self.dir = 'd'
-            self.change_dir()
-            self.head_rect.y += self.speedY
+            self.change_dir(turning_point)
+            self.speedY = 3
+            self.speedX = 0
 
-        elif keys[pygame.K_a] and self.dir != 'r':
+        elif keys == pygame.K_LEFT and self.dir != 'r':
             self.dir = 'l'
-            self.change_dir()
-            self.head_rect.x -= self.speedX
+            self.change_dir(turning_point)
+            self.speedY = 0
+            self.speedX = -3
 
-        elif keys[pygame.K_d] and self.dir != 'l':
+        elif keys == pygame.K_RIGHT and self.dir != 'l':
             self.dir = 'r'
-            self.change_dir()
-            self.head_rect.x += self.speedX
+            self.change_dir(turning_point)
+            self.speedY = 0
+            self.speedX = 3
 
 
 
-    def change_dir(self):
+    def change_dir(self, t_p):
+        for part in t_p:
+            if part[2] == 'r' and self.dir == 'u':
+                
 
-        if self.dir == 'r':
-            self.head_img = hr
-            # self.body_img = 
-        elif self.dir == 'l':
-            self.head_img = hl
-        elif self.dir == 'u':
-            self.head_img = hu
-        elif self.dir == 'd':
-            self.head_img = hd
-        else: print('self.dir bug')
-
-    
+        # if self.dir == 'r':
+        #     self.head_img = hr
+        #     # self.body_img = 
+        # elif self.dir == 'l':
+        #     self.head_img = hl
+        # elif self.dir == 'u':
+        #     self.head_img = hu
+        # elif self.dir == 'd':
+        #     self.head_img = hd
+        # else: print('self.dir bug')
 
     def checkCollision(self, player, enemy):
         col = pygame.sprite.collide_rect(player, enemy)

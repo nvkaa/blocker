@@ -31,13 +31,16 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
                 pygame.quit()
+            if event.type == pygame.KEYDOWN:
+                # keys = pygame.key.get_pressed()
+                player.move(event.key)
+
+                
 
 
 
         
         
-        keys = pygame.key.get_pressed()
-        player.move(keys)
         # enemy.move(keys)
 
         screen.fill("purple")
